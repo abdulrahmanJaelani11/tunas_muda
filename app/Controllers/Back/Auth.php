@@ -16,7 +16,7 @@ class Auth extends BaseController
 
     public function login()
     {
-        return view('back/login_v2');
+        return view('back/login');
     }
 
     public function ProsesLogin()
@@ -27,17 +27,31 @@ class Auth extends BaseController
         $respons = [];
 
         if ($data && $data[0]->password == $password) {
-            $respons = [
-                'status' => 200,
-                'message' => 'Login Berhasil'
-            ];
+            $_SESSION['login'] = true;
+            $_SESSION['user_id'] = $data[0]->id;
+            $_SESSION['username'] = $data[0]->username;
+            $_SESSION['email'] = $data[0]->email;
+
+            // $respons = [
+            //     'status' => 200,
+            //     'message' => 'Login Berhasil'
+            // ];
+            return redirect()->to(base_url('beranda'));
         } else {
-            $respons = [
-                'status' => 500,
-                'message' => 'Login Gagal'
-            ];
+            // $respons = [
+            //     'status' => 500,
+            //     'message' => 'Login Gagal'
+            // ];
+            $this->session->setFlashdata('error', 'Login Gagal');
+            return redirect()->back()->withInput();
         }
 
-        echo json_encode($respons);
+        // echo json_encode($respons);
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to(base_url('login'));
     }
 }

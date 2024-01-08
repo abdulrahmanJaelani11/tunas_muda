@@ -26,7 +26,11 @@ class BaseController extends Controller
      *
      * @var CLIRequest|IncomingRequest
      */
+    protected $data;
     protected $request;
+    protected $session;
+    protected $SitusModel;
+    protected $SliderModel;
 
     /**
      * An array of helpers to be loaded automatically upon
@@ -35,7 +39,7 @@ class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = [];
+    protected $helpers = ['encrypter', 'tgl_indo'];
 
     /**
      * Constructor.
@@ -46,7 +50,13 @@ class BaseController extends Controller
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
-
         // E.g.: $this->session = \Config\Services::session();
+
+        $this->SitusModel = new \App\Models\SitusModel();
+        $this->SliderModel = new \App\Models\SliderModel();
+
+        $this->session         = \Config\Services::session();
+        $this->data['situs'] = $this->SitusModel->getData(1);
+        $this->data['slide'] = $this->SliderModel->getSlider();
     }
 }
